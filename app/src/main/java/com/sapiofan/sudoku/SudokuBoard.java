@@ -11,8 +11,6 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
-
 public class SudokuBoard extends View {
 
     private final int boardColor;
@@ -29,7 +27,7 @@ public class SudokuBoard extends View {
 
     private int cellSize;
 
-    private final Game game = new Game();
+    private final Game game = new Game(9);
 
     public SudokuBoard(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -140,11 +138,11 @@ public class SudokuBoard extends View {
     private void drawNumbers(Canvas canvas) {
         numberColorPaint.setTextSize(cellSize);
 
-        int[][] board = game.getBoard();
+        Cell[][] board = game.getInitBoard();
         for (int r = 0; r < board.length; r++) {
             for (int c = 0; c < board.length; c++) {
-                if (board[r][c] != 0) {
-                    String text = Integer.toString(board[r][c]);
+                if (board[r][c].getValue() != 0 && board[r][c].isFixed()) {
+                    String text = Integer.toString(board[r][c].getValue());
 
                     float width, height;
                     numberColorPaint.getTextBounds(text, 0, text.length(), numberBounds);
@@ -152,29 +150,45 @@ public class SudokuBoard extends View {
                     width = numberColorPaint.measureText(text);
                     height = numberBounds.height();
 
-                    canvas.drawText(text, c * cellSize + (cellSize - width) / 2,
-                            (r * cellSize + cellSize) - (cellSize - height) / 2, numberColorPaint);
+                    canvas.drawText(text, (c * cellSize) + ((cellSize - width) / 2),
+                            (r * cellSize + cellSize) - ((cellSize - height) / 2), numberColorPaint);
                 }
             }
         }
 
         numberColorPaint.setColor(userNumberColor);
+        for (int r = 0; r < board.length; r++) {
+            for (int c = 0; c < board.length; c++) {
+                if (board[r][c].getValue() != 0 && !board[r][c].isFixed()) {
+                    String text = Integer.toString(board[r][c].getValue());
 
-        for (ArrayList<Integer> emptyBox : game.getEmptyBoxes()) {
-            int r = emptyBox.get(0);
-            int c = emptyBox.get(1);
+                    float width, height;
+                    numberColorPaint.getTextBounds(text, 0, text.length(), numberBounds);
 
-            String text = Integer.toString(board[r][c]);
+                    width = numberColorPaint.measureText(text);
+                    height = numberBounds.height();
 
-            float width, height;
-            numberColorPaint.getTextBounds(text, 0, text.length(), numberBounds);
-
-            width = numberColorPaint.measureText(text);
-            height = numberBounds.height();
-
-            canvas.drawText(text, c * cellSize + (cellSize - width) / 2,
-                    (r * cellSize + cellSize) - (cellSize - height) / 2, numberColorPaint);
+                    canvas.drawText(text, (c * cellSize) + ((cellSize - width) / 2),
+                            (r * cellSize + cellSize) - ((cellSize - height) / 2), numberColorPaint);
+                }
+            }
         }
+
+//        for (ArrayList<Integer> emptyBox : game.getEmptyBoxes()) {
+//            int r = emptyBox.get(0);
+//            int c = emptyBox.get(1);
+//
+//            String text = Integer.toString(board[r][c]);
+//
+//            float width, height;
+//            numberColorPaint.getTextBounds(text, 0, text.length(), numberBounds);
+//
+//            width = numberColorPaint.measureText(text);
+//            height = numberBounds.height();
+//
+//            canvas.drawText(text, c * cellSize + (cellSize - width) / 2,
+//                    (r * cellSize + cellSize) - (cellSize - height) / 2, numberColorPaint);
+//        }
     }
 
     public Game getGame() {

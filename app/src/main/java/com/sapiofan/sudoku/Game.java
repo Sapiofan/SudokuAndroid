@@ -5,25 +5,22 @@ import java.util.Arrays;
 
 public class Game {
 
-    private final int[][] board;
+    private final Cell[][] initBoard;
     private final ArrayList<ArrayList<Integer>> emptyCells = new ArrayList<>();
+    private final int SIZE;
 
     private int selectedRow = -1;
     private int selectedColumn = -1;
 
-    public Game() {
-        board = new int[9][9];
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
-                board[i][j] = 0;
-            }
-        }
+    public Game(int size) {
+        SIZE = size;
+        initBoard = GenerateBoard.generate(size, 40);
     }
 
     public ArrayList<ArrayList<Integer>> getEmptyBoxes() {
-        for (int r = 0; r < board.length; r++) {
-            for (int c = 0; c < board.length; c++) {
-                if(board[r][c] == 0) {
+        for (int r = 0; r < initBoard.length; r++) {
+            for (int c = 0; c < initBoard.length; c++) {
+                if(initBoard[r][c].getValue() == 0) {
                     ArrayList<Integer> arrayList = new ArrayList<>();
                     arrayList.add(r);
                     arrayList.add(c);
@@ -36,17 +33,18 @@ public class Game {
     }
 
     public void setNumberPosition(int num) {
-        if (selectedRow != -1 && selectedColumn != -1) {
-            if (board[selectedRow - 1][selectedColumn - 1] == num) {
-                board[selectedRow - 1][selectedColumn - 1] = 0;
+        if (selectedRow != -1 && selectedColumn != -1 &&
+                !initBoard[selectedRow - 1][selectedColumn - 1].isFixed()) {
+            if (initBoard[selectedRow - 1][selectedColumn - 1].getValue() == num) {
+                initBoard[selectedRow - 1][selectedColumn - 1].setValue(0);
                 return;
             }
-            board[selectedRow][selectedColumn] = num;
+            initBoard[selectedRow - 1][selectedColumn - 1].setValue(num);
         }
     }
 
-    public int[][] getBoard() {
-        return Arrays.copyOf(board, board.length);
+    public Cell[][] getInitBoard() {
+        return initBoard;
     }
 
     public int getSelectedRow() {
