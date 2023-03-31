@@ -27,7 +27,7 @@ public class SudokuBoard extends View {
 
     private int cellSize;
 
-    private final Game game = new Game(9);
+    private final Game game = new Game(9, 40);
 
     public SudokuBoard(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -173,22 +173,6 @@ public class SudokuBoard extends View {
                 }
             }
         }
-
-//        for (ArrayList<Integer> emptyBox : game.getEmptyBoxes()) {
-//            int r = emptyBox.get(0);
-//            int c = emptyBox.get(1);
-//
-//            String text = Integer.toString(board[r][c]);
-//
-//            float width, height;
-//            numberColorPaint.getTextBounds(text, 0, text.length(), numberBounds);
-//
-//            width = numberColorPaint.measureText(text);
-//            height = numberBounds.height();
-//
-//            canvas.drawText(text, c * cellSize + (cellSize - width) / 2,
-//                    (r * cellSize + cellSize) - (cellSize - height) / 2, numberColorPaint);
-//        }
     }
 
     public Game getGame() {
